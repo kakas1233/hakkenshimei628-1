@@ -103,7 +103,7 @@ if st.sidebar.button("追加") and new_class and new_class not in st.session_sta
 # クラス選択
 tab = st.sidebar.selectbox("クラス選択", st.session_state.class_list)
 
-    st.header(f"📋 {tab} の設定")
+ st.header(f"📋 {tab} の設定")
     k = st.number_input("年間授業回数", value=30, min_value=1, key=tab+"k")
     l = st.number_input("授業1回あたりの平均指名人数", value=5, min_value=1, key=tab+"l")
     n = st.number_input("クラス人数", value=40, min_value=1, key=tab+"n")
