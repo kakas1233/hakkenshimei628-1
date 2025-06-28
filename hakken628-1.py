@@ -74,14 +74,34 @@ def find_best_seed_and_method(k, l, n):
 def run_app():
     st.title("🎲 指名アプリ")
 
-    # クラス選択と追加
-    if "class_list" not in st.session_state:
-        st.session_state.class_list = ["クラスA", "クラスB", "クラスC"]
-    class_options = st.session_state.class_list
-    new_class = st.text_input("➕ 新しいクラス名を追加", "")
-    if st.button("追加") and new_class and new_class not in class_options:
-        class_options.append(new_class)
-    tab = st.sidebar.selectbox("クラス選択", class_options)
+ # クラス一覧の初期化と編集可能UI
+if "class_list" not in st.session_state:
+    st.session_state.class_list = ["クラスA", "クラスB", "クラスC"]
+
+st.sidebar.markdown("## 🏷️ クラス名の編集")
+
+edited_names = []
+for i, name in enumerate(st.session_state.class_list):
+    new_name = st.sidebar.text_input(f"クラス {i+1} の名前", value=name, key=f"class_name_{i}")
+    edited_names.append(new_name)
+
+if st.sidebar.button("💾 クラス名を保存"):
+    # 名前が空 or 重複していないかチェック
+    if any(name.strip() == "" for name in edited_names):
+        st.sidebar.error("❌ 空のクラス名があります。")
+    elif len(set(edited_names)) != len(edited_names):
+        st.sidebar.error("❌ クラス名が重複しています。")
+    else:
+        st.session_state.class_list = edited_names
+        st.sidebar.success("✅ クラス名を保存しました！")
+
+# クラスの追加
+new_class = st.sidebar.text_input("➕ 新しいクラス名を追加", "")
+if st.sidebar.button("追加") and new_class and new_class not in st.session_state.class_list:
+    st.session_state.class_list.append(new_class)
+
+# クラス選択
+tab = st.sidebar.selectbox("クラス選択", st.session_state.class_list)
 
     st.header(f"📋 {tab} の設定")
     k = st.number_input("年間授業回数", value=30, min_value=1, key=tab+"k")
